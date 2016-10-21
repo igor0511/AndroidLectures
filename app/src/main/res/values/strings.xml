@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Kalkulator</string>
+    <string name="num_1">1</string>
+    <string name="num_2">2</string>
+    <string name="num_3">3</string>
+    <string name="num_4">4</string>
+    <string name="num_5">5</string>
+    <string name="num_6">6</string>
+    <string name="num_7">7</string>
+    <string name="num_8">8</string>
+    <string name="num_9">9</string>
+    <string name="num_0">0</string>
+    <string name="num_plus">+</string>
+    <string name="num_minus">-</string>
+    <string name="num_multi">*</string>
+    <string name="num_del">/</string>
+    <string name="num_equals">=</string>
+    <string name="num_ce">CE</string>
+</resources>
