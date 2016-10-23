@@ -9,6 +9,8 @@
     android:background="@android:color/white"
     android:elevation="4dp">
 
+    <include layout="@layout/toolbar" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +30,7 @@
             android:textSize="24sp"
             android:layout_alignParentStart="false"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"/>
 
         <TextView
             android:id="@+id/top_display"

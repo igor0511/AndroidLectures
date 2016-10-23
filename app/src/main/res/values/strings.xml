@@ -16,4 +16,5 @@
     <string name="num_del">/</string>
     <string name="num_equals">=</string>
     <string name="num_ce">CE</string>
+    <string name="advanced_button">Advanced</string>
 </resources>
