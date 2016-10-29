@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">TodoApp</string>
+    <string name="login_name">Enter you name</string>
+    <string name="login_button">Login</string>
+    <string name="todo_text">Enter todo here</string>
+
+    <string name="new_todo_notification_title_template">New todo: %1$s</string>
+
+    <!-- TODO: remove this placeholder text -->
+    <string name="new_todo_notification_placeholder_text_template">
+        You have added a todo item called: %1$s
+    </string>
+
+    <string name="action_share">Share</string>
+    <string name="action_reply">Reply</string>
+</resources>
