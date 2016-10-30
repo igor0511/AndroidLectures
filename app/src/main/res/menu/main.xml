@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ovaj fajl oznacava jedan meni, koji moze da se doda na toolbar. Unutar njega oznacavamo sve
+    opcije koji korisnik moze da odabere ukoliko otvori meni.
+
+    Atribut icon u item-u oznacava ikonicu koja ce se pojaviti u meniju. Ikonice i ostali resursi
+    tog tipa se nalaze u res/drawable. Atribut showAsAction oznacava kako ce se ikonica prikazati,
+    ukoliko je postavljen atribut na always, ova ikonica ce se pojaviti. Ukoliko je postavljen atribut
+    na ifRoom, ukoliko ima mesta, ikonica ce se pojaviti, ukoliko nema, pojavice se ikonica sa tri
+    vertikalne tacke. Ukoliko se ta ikonica sa tri tacke klikne, otvara se padajuca lista u kojoj se
+    nalazi ta opcija.
+-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/advanced_calculator"
         android:icon="@drawable/ic_advanced"

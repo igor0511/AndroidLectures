@@ -1,3 +1,11 @@
+<!--
+    U ovom fajlu se cuvaju svi stringovi. Ovo je korisno ukoliko zelimo da nasa aplikacija radi
+    na vise jezika, na vise lokaliteta. Ovaj fajl omogucava da se stringovima na odredjenom jeziku
+    pristupa preko name atributa, a ne preko vrednosti.
+
+    Svakom stringu iz ovog fajla se pristupa preko @string/[name] selektora.s
+-->
+
 <resources>
     <string name="app_name">Kalkulator</string>
     <string name="num_1">1</string>

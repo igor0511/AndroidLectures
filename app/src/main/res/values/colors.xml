@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    U ovom fajlu se pakuju sve definisane boje. Svakoj boji u heksadecimalnom zapisu se dodeljuje
+    name atribut, koji predstavlja referencu do te boje. To omogucava da se ista boja koristi
+    koristeci ime, a ne heksadecimalnu vrednost.
+
+    Svakoj boji se pristupa preko @color/[name] selektora.
+-->
+
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#8e91a7</color>

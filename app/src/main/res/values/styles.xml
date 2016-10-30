@@ -1,15 +1,18 @@
+<!--
+    U ovom fajlu se cuvaju svi stilovi koje zelimo da pridruzimo nekim elementima u layout fajlu,
+    kao i teme za celu aplikaciju. Svaki stil predstavlja skup atributa koji se mogu definisati u svakom
+    elementu u layout fajlu. Stilovi su slicni kao class atributi u css-u.
+-->
+
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/text_background</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="NumButtonStyle" >
-        <item name="android:elevation">4dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">80dp</item>
         <item name="android:background">@drawable/num_button</item>

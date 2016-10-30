@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    LinearLayout je jedan od osnovnih layout elemenata koji sluzi kada zelimo da sva deca koja se
+    nalaze u okviru tog layout-a budu u jednoj koloni.
+
+    LinearLayout-u moze da se pridruzi atribut orientation koji odredjuje orijentaciju elemenata koji
+    se nalaze u okviru layouta. Ta orijentacija moze biti horizontalna ili vertikalna. U ovom slucaju,
+    posto imamo 3 elementa u okviru layout-a koje zelimo da stoje jedan iznad drugog, orijentaciju
+    postavljamo na vertical.
+
+    Na svaki element unutar ovog taga postavljamo weight, koji oznacava prioritet svakog elementa
+    u odredjivanju visine koju ce uzeti element. RelativeLayout i TableLayout imaju isti weight, 1,
+    sto znaci da ce ravnomerno zauzeti prostor koji se nalazi izmedju toolbar-a i dna ekrana. Toolbar
+    ima tacno specificiarnu visinu.
+-->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
@@ -9,7 +24,21 @@
     android:background="@android:color/white"
     android:elevation="4dp">
 
+    <!--
+        include tag koristimo kada zelimo da dodamo element koji se nalazi u nekom drugom layout
+        fajlu. Slican je kao include u php programskom jeziku. U ovom slucaju, mi dodajemo
+        glavni toolbar na ovaj nacin, jer zelimo custom toolbar, a ne onaj koji je dolazi uz
+        standardnu temu aplikacije.
+    -->
+
     <include layout="@layout/toolbar" />
+
+    <!--
+        RelativeLayout koristimo kada zelimo decu unutar tog elementa da postavimo prema drugim elemntima
+        ili prema samom layout-u. Kao sto vidimo, imamo dva textview elementa koji treba da stoje jedan iznad drugog,
+        s tim da oba zajedno treba da stoje na dnu ovog dela ekrana. To se postize dodavanjem atributa
+        layout_alignParentBottom i layout_above atributa na textview.
+    -->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -49,6 +78,14 @@
 
     </RelativeLayout>
 
+    <!--
+        TableLayout sluzi kada zelimo da neki deo ekrana prikazemo kao tabelu. StretchColumns atribut
+        sluzi kada zelimo da oznacimo koja kolona ce da se rasiri ukoliko ostane praznog prostora na ekranu.
+
+        TableLayout ima decu elemente tipa TableRow koji oznacavaju redove u tabeli. U ovom slucaju, tabela
+        ima 4 reda.
+    -->
+
     <TableLayout
         android:id="@+id/gridLayout"
         android:layout_width="match_parent"
@@ -56,6 +93,18 @@
         android:stretchColumns="3"
         android:layout_weight="1"
         android:elevation="0dp">
+
+        <!--
+            Svakom TableRow elementu dodeljujemo jednaki layout_weight, kako bismo ih jednako rasirili
+            po ekranu.
+
+            Unutar svakog reda nalaze se Button elementi, koji oznacavaju dugme. Svakom Button elementu
+            pridruzujemo onClick event koji oznacava metodu Unutar MainActivity klase koja ce se pozvati
+            kada korisnik pritisne dugme.
+
+            Svakom Button elementu dodeljujemo style atribut, koji oznacava set atributa koje svaki
+            element ima (slicno class atributu u css). Svi stilovi se nalaze u res/values/styles.xml fajlu.
+        -->
 
         <TableRow android:layout_weight="1">
             <Button
