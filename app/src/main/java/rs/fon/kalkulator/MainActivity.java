@@ -78,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
 
         operation = "";
 
+        /*
+        * Za inicijalizaciju bilo kog elementa iz layout fajla, koristi se metoda
+        * findViewById(int id) koja vraca objekat View klase, koju mi kasnije kastujemo
+        * u klasu koja je nama potrebna
+        * */
+
         bottomDisplay = (TextView) findViewById(R.id.bottom_display);
         topDisplay = (TextView) findViewById(R.id.top_display);
 
