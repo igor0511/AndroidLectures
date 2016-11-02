@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Kao glavni layout koristimo RelativeLayout, jer zelimo da centriramo ostatak elemenata.
+-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_login"
@@ -10,13 +13,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="rs.fon.todoapp.LoginActivity">
 
-    <RelativeLayout
+    <!--
+        Iako ovde Android Studio izbacuje predlog da se izbrise ovaj LinearLayout, ignorisacemo taj
+        predlog, jer je prakticnije enkapsulirati formu u jedan layout, kako bi se cela forma ponasala
+        kao jedan element. U slucaju kad bismo, recimo, dodali dugme za registraciju, koja stoji na dnu ekrana,
+        to dugme bi stajalo kao zaseban element, a forma ostala jedan, sto nam daje bolju kontrolu nad
+        nasim layout-om.
+
+        Naravno, na LinearLayout-u pridruzujemo atribut vertikalne orijentacije, jer zelimo da se
+        elementi unutar njega nalaze jedan ispod drugog. layout_width i layout_height postavljamo na
+        wrap_content, jer zelimo da se on siri na osnovu sirine i visine onoga sto se nalazi unutar
+        njega.
+    -->
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:orientation="vertical">
 
+        <!--
+            EditText predstavlja input polje u Android okruzenju, nesto slicno kao input tag u html.
+            njemu dodeljujemo id, kako bismo mogli kasnije u Java kodu da se pozivamo na njega. Atribut
+            hint sluzi kao atribut placeholder na input polju u html, to je tekst koji je prikazan sve
+            dok korisnik ne klikne na polje. Dodajemo layout_marginBottom kako bismo razdvojili EditText
+            od Button-a.
+        -->
         <EditText
             android:id="@+id/login_name"
             android:layout_width="wrap_content"
@@ -27,13 +50,19 @@
             android:hint="@string/login_name"
             android:textAlignment="center" />
 
+        <!--
+            layout_gravity atribut u ovom Button-u predstavlja kako je button pozicioniran u odnosu
+            na svog roditelja, u ovom slucaju LinearLayout. Postoji takodje i atribut gravity, koji
+            predstavlja pozicioniranje svakog elementa unutar datog elementa, u ovom slucaju, poziciju
+            teksta unutar Button-a u odnosu na sam Button.
+        -->
+
         <Button
             android:id="@+id/login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/login_name"
-            android:layout_centerHorizontal="true"
-            android:text="@string/login_button" />
+            android:text="@string/login_button"
+            android:layout_gravity="center" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

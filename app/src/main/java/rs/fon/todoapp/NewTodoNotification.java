@@ -33,6 +33,9 @@ public class NewTodoNotification {
         final String text = res.getString(
                 R.string.new_todo_notification_placeholder_text_template, exampleString);
 
+        Intent newIntent = new Intent(context, TodoActivity.class);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setSmallIcon(R.drawable.ic_stat_new_todo)
@@ -49,8 +52,8 @@ public class NewTodoNotification {
                         PendingIntent.getActivity(
                                 context,
                                 0,
-                                new Intent(context,TodoActivity.class),
-                                PendingIntent.FLAG_UPDATE_CURRENT))
+                                newIntent,
+                                PendingIntent.FLAG_CANCEL_CURRENT))
 
 
                 .setStyle(new NotificationCompat.BigTextStyle()
