@@ -10,13 +10,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <!--
-            Svaki activity koji se nalazi u sklopu nase aplikacije se mora deklarisati unutar manifest-a,
-            koristeci tag <activity>. Kao sto vidite, ovde ima dva activity-ja ".LoginActivity" i ".TodoActivity"
-            ciji naziv odgovara nazivu Java klasa za te Activity.
-        -->
-
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,27 +22,10 @@
             android:windowSoftInputMode="adjustPan">
         </activity>
 
-        <!--
-            <receiver> tag oznacava BroadcastReceiver koncept. To je kod, koji je definisan u okviru
-            naseg projekta, koji se pokrece i izvsava kada stigne odgovarajuci implicitni intent sa
-            odgovarajucim action-om. Unutar receiver taga se definise name, koji oznacava klasu u nasem
-            projektu, koja ce se izvrsiti. U okviru receivera se definise intent-filter, koji kako samo
-            ime kaze, sluzi da filtrira intent-ove, filtriranje vrsi na osnovu action, category i data.
-
-            Ono sto u prakticnom smislu znaci ovaj intent-filter, kada neko posalje implicitni intent
-            na nacin na koji smo ga mi poslali u TodoActivity, sa action-om rs.fon.todo.Notif, izvrsice
-            se kod koji se nalazi u NotificationReceiver klasi.
-
-            Atribut exported oznacava da li je dozvoljeno da se ovaj receiver izvrsava ukoliko je intent
-            poslat van nase aplikacije. U ovom slucaju, mi zelimo da se on izvrsi samo kada intent dodje
-            iz TodoActivity, sto predstavlja nasu aplikaciju, dakle postavicemo exported na false. To
-            je jako bitno zbog sigurnosti nase aplikacije.
-        -->
-
         <receiver
             android:name=".NotificationReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="rs.fon.todo.Notif" />
             </intent-filter>

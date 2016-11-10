@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Ovaj Fajl predstavlja layout koji ce Adapter da koristi kada bude pravio ListView iz
-    activity_todo. Dodeljujemo paddingLeft, kako bi se tekst svakog todo_a pomerio malo u desno,
-    takodje centriramo tekst vertikalno.
--->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="50dp"
@@ -13,6 +8,7 @@
     android:gravity="center_vertical"
     android:layout_marginStart="20dp"
     android:paddingLeft="20dp"
-    android:paddingStart="20dp">
+    android:paddingStart="20dp"
+    android:onClick="onSendEmail">
 
 </TextView>
