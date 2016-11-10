@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.support.annotation.BoolRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuAdapter;
@@ -100,18 +101,6 @@ public class TodoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("Lifecycle", "onResume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("Lifecycle", "onPause");
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
 
@@ -120,29 +109,28 @@ public class TodoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("Lifecycle", "onRestart");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("Lifecycle", "onDestroy");
-    }
-
-    @Override
     public void onBackPressed() {
 
     }
 
     public void onLogoutClicked(View view) {
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.remove("username");
-        edit.apply();
-
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("username");
         Intent intent = new Intent(this,LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    public void onSendEmail(View view) {
+        TextView textView = (TextView) view;
+        String text = textView.getText().toString();
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+
+        startActivity(Intent.createChooser(intent, "Send Email"));
     }
 
     private class WriteToDatabase extends AsyncTask<TodoItem, Void, Boolean> {
@@ -181,7 +169,6 @@ public class TodoActivity extends AppCompatActivity {
             ArrayList<String> todoList = new ArrayList<>();
 
             String[] projection = {
-                    TodoItemContract.TodoItemEntry._ID,
                     TodoItemContract.TodoItemEntry.COLUMN_NAME_TEXT,
             };
 
@@ -225,6 +212,19 @@ public class TodoActivity extends AppCompatActivity {
             } else {
                 Log.d("dbOperation", "nothing to read");
             }
+        }
+    }
+
+    private class Ime extends AsyncTask<String,Void,Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
         }
     }
 }

@@ -42,8 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("username",name);
                     editor.apply();
 
-                    Intent intent = new Intent(getApplicationContext(), TodoActivity.class);
-
+                    Intent intent = new Intent(LoginActivity.this, TodoActivity.class);
                     startActivity(intent);
                 }
             }

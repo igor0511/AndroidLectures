@@ -31,6 +31,9 @@ public class TodoItem {
 
     @Override
     public String toString() {
-        return "text: "+text+", user"+user;
+        return "TodoItem{" +
+                "text='" + text + '\'' +
+                ", user='" + user + '\'' +
+                '}';
     }
 }
