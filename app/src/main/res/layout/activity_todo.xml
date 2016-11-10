@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Ovde smo ekran podelili na tri dela, jedan gde se prikazuje tekst onoga sto ukucamo u LoginActiviy,
+    jedan gde se prikazuje lista todo_a i deo koji sadrzi formu za ubacivanje novog todo_a u listu. Zbog
+    toga ovde koristimo LinearLayout, gde svakom elementu dodajemo layout_weight, kako bismo visine elemenata
+    rasporedili kako zelimo. Orijentacija je vertikalna.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_todo"
@@ -35,13 +42,23 @@
             android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
+    <!--
+           ListView predstavlja view u kome se prikazuje lista elemenata. Ona je scrollable sama po sebi.
+           Za vise o tome kako radi ListView pogledati Objasnjenje Adapter-a u TodoActivity klasi.
 
+           Postavljen je layout_weight kako bi ovaj ListView zauzeo najveci deo ekrana.
+       -->
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_view"
         android:layout_weight="1"
         />
+
+    <!--
+        Formu kao i u activity_login, enkapsuliramo u jedan LinearLayout, kako bi se ona ponasala kao
+        jedinstvena celina. Dodeljujemo joj weight od 4, kako bi bila iste velicine kao TextView.
+    -->
 
     <LinearLayout
         android:layout_width="match_parent"

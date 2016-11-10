@@ -2,6 +2,12 @@ package rs.fon.todoapp.model;
 
 /**
  * Created by calem on 11/3/2016.
+ *
+ *
+ * Klasu TodoItem pravimo sa ciljem grupisanja korisnika i teksta todo_a.
+ *
+ * Objekti ove klase imaju samo polje tekst i user. Definisani su konstruktor i standardni
+ * getter-i i setter-i.
  */
 
 public class TodoItem {

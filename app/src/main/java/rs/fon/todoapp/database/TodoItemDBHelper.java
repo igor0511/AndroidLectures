@@ -9,6 +9,8 @@ import java.sql.SQLData;
 
 /**
  * Created by calem on 11/3/2016.
+ *
+ * Klasa koja sluzi kao pomocna klasa za upravljanje bazom.
  */
 
 public class TodoItemDBHelper extends SQLiteOpenHelper {
