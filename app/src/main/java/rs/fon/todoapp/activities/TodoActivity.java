@@ -81,8 +81,6 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         if(username.isEmpty()) {
             Intent i = new Intent(this,LoginActivity.class);
             startActivity(i);
-
-            finish();
         }
         //region Description
         /*
