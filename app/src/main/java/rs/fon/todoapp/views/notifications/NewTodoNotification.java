@@ -1,4 +1,4 @@
-package rs.fon.todoapp;
+package rs.fon.todoapp.views.notifications;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -7,11 +7,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+
+import rs.fon.todoapp.R;
+import rs.fon.todoapp.activities.TodoActivity;
 
 /**
  * Helper class for showing and canceling new todo

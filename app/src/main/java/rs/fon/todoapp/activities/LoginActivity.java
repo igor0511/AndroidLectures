@@ -1,4 +1,4 @@
-package rs.fon.todoapp;
+package rs.fon.todoapp.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,7 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import rs.fon.todoapp.R;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText loginText = null;
@@ -28,42 +29,9 @@ public class LoginActivity extends AppCompatActivity {
 
         loginText = (EditText) findViewById(R.id.login_name);
 
-        /*
-        * SharedPreferences predstavlja nacin cuvanja korisnickih podataka. To je perzistentan metod
-        * cuvanja podataka, gde podaci ostaju sacuvani i nakon sto korisnik izadje iz aplikacija, restartuje
-        * telefon ili nakon sto operativni sistem odluci da unisti nasu aplikaciju.
-        *
-        * U sharedPreferences mogu da se upisuju sao primitivni tipovi podataka, kao na primer: boolean,
-        * int, float, String...
-        *
-        * Najcesce se koristi za korisnica podesavanja aplikacije, na primer ringtone ili tema aplikacije.
-        *
-        * Da bismo dobili sharedPreferences objekat pozivamo getSharedPreferences() metodu, koja prima
-        * dva parametra. Prvi je ime sharedpreferences objekta, koje je proizvoljno, ali je bitno da znamo
-        * kako smo ga nazvali, kako bismo mogli da se pozivamo na isti fajl ukoliko to zelimo. Drugi
-        * parametar je nacin upisivanja u fajl. Najcesce se koristi MODE_PRIVATE.
-        *
-        * Iz sharedPrefernces objekta vadimo podatke pozivanjem odgovarajuce get metode. U ovom slucaju
-        * vadimo String, pa pozivamo sharedPreferences.getString(). Njoj prosledjujemo ime stringa i
-        * default vrednost.
-        *
-        * */
+        final Button loginButton = (Button) findViewById(R.id.login_button);
 
         sharedPreferences = getSharedPreferences("todoApp",MODE_PRIVATE);
-
-        String username = sharedPreferences.getString("username","");
-
-        /*
-        * Ovde proveravamo da li se ne ko vec ulogovao na nasu aplikaciju. Ukoliko jeste, prelazimo
-        * odmah na TodoActivity.
-        * */
-
-        if(!username.isEmpty()) {
-            Intent intent = new Intent(this,TodoActivity.class);
-            startActivity(intent);
-        }
-
-        final Button loginButton = (Button) findViewById(R.id.login_button);
 
         /*
         * SetOnClickListener metod iz klase Button postavalja eventListener na taj button. U njoj se
@@ -116,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                     * koristili bismo samo this.
                     * */
                     Intent intent = new Intent(LoginActivity.this, TodoActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                     /*
                     * Da bismo mogli da prenosimo vrednosti iz jednog activity-ja u drugi, koristimo
@@ -131,6 +100,8 @@ public class LoginActivity extends AppCompatActivity {
                     * Prima kao parametar objekat klase Intent.
                     * */
                     startActivity(intent);
+
+                    finish();
                 }
             }
         });

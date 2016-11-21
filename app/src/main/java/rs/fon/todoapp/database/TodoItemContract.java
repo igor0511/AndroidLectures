@@ -18,6 +18,7 @@ public class TodoItemContract {
             "CREATE TABLE " + TodoItemEntry.TABLE_NAME + " (" +
                     TodoItemEntry._ID + " INTEGER PRIMARY KEY," +
                     TodoItemEntry.COLUMN_NAME_TEXT + TEXT_TYPE + COMMA_SEP +
+                    TodoItemEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
                     TodoItemEntry.COLUMN_NAME_USER + STRING_TYPE + " )";
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TodoItemEntry.TABLE_NAME;
@@ -37,5 +38,6 @@ public class TodoItemContract {
         public static final String TABLE_NAME = "todos";
         public static final String COLUMN_NAME_TEXT = "text";
         public static final String COLUMN_NAME_USER = "user";
+        public static final String COLUMN_NAME_TITLE = "title";
     }
 }

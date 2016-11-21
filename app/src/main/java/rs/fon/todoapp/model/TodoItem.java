@@ -11,10 +11,11 @@ package rs.fon.todoapp.model;
  */
 
 public class TodoItem {
+    private String title;
     private String text;
     private String user;
 
-    public TodoItem(String text, String user) {
+    public TodoItem(String title, String text, String user) {
         this.text = text;
         this.user = user;
     }
@@ -33,6 +34,14 @@ public class TodoItem {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

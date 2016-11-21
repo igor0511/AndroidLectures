@@ -17,16 +17,17 @@
             ciji naziv odgovara nazivu Java klasa za te Activity.
         -->
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activities.LoginActivity">
+
+        </activity>
+        <activity
+            android:name=".activities.TodoActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".TodoActivity"
-            android:windowSoftInputMode="adjustPan">
         </activity>
 
         <!--
@@ -47,7 +48,7 @@
         -->
 
         <receiver
-            android:name=".NotificationReceiver"
+            android:name=".views.notifications.NotificationReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

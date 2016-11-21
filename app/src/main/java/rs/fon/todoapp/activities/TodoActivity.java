@@ -1,15 +1,15 @@
-package rs.fon.todoapp;
+package rs.fon.todoapp.activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.BoolRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuAdapter;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,26 +19,29 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
 
+import rs.fon.todoapp.R;
 import rs.fon.todoapp.database.TodoItemContract;
 import rs.fon.todoapp.database.TodoItemDBHelper;
+import rs.fon.todoapp.fragments.NewTodoFragment;
 import rs.fon.todoapp.model.TodoItem;
 
-public class TodoActivity extends AppCompatActivity {
+public class TodoActivity extends AppCompatActivity implements NewTodoFragment.OnFragmentInteractionListener {
+    //region Description
     /*
     * Ovo je konstanta koja sluzi kao Action u Implicitnom Intentu.
     * */
+    //endregion
     private static final String notificationIntent = "rs.fon.todo.Notif";
 
     private String username;
     private TextView nameText;
     private ListView listView;
 
+    //region Description
     /*
+
     * Ovde su definisani lista todo_a i adapter za tu listu.
     *
     * Lista je obicna ArrayList koja prima Stringove, dakle samo lista stringova.
@@ -47,7 +50,9 @@ public class TodoActivity extends AppCompatActivity {
     * liste koja mu je pridruzena pravi layout i postavlja ga u odredjeni view. U nasem slucaju,
     * lista koju cemo mu pridruziti je todoList, layout je layout koji se nalazi u fajlu layout/todo_item.xml,
     * a View u kome ce se prikazati lista TextView-ova je ListView iz activity_todo.xml fajla.
+    *
     * */
+    //endregion
     private ArrayList<String> todoList;
     private ArrayAdapter<String> todoListAdapter = null;
 
@@ -55,19 +60,31 @@ public class TodoActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences = null;
 
+    private NewTodoFragment fragment = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
 
 
+        //region Description
         /*
         * Inicijalizacija SharedPreferences objekta se vrsi na isti nacin kao i u LoginActivity.
         * Obavezno je da ime fajla bude isto.
         * */
+        //endregion
 
         sharedPreferences = getSharedPreferences("todoApp",MODE_PRIVATE);
         username = sharedPreferences.getString("username","");
+
+        if(username.isEmpty()) {
+            Intent i = new Intent(this,LoginActivity.class);
+            startActivity(i);
+
+            finish();
+        }
+        //region Description
         /*
         * Na ovaj nacin vadimo String iz Extras iz Intenta koji je doveo do naseg Activity.
         *
@@ -80,76 +97,40 @@ public class TodoActivity extends AppCompatActivity {
         * Ovde vadimo TextView iz layout fajla koji treba da pokaze ono sto je ukucano u LoginActivity.
         * Zatim postavljamo za tekst vrednost koju smo izvadili iz intent-a.
         * */
+        //endregion
         nameText = (TextView) findViewById(R.id.todo_name);
         nameText.setText(username);
 
 
+        //region Description
         /*
         * Inicijalizacija liste i adapter-a. U konstruktoru adapter-a definisemo kontekst, u ovom
         * slucaju Activity, tj. this, Layout jednog itema, u ovom slucaju fajl res/layout/todo_item.xml,
         * tj. R.layout.todo_item i listu stringova, tj. todoList.
         * */
+        //endregion
         todoList = new ArrayList<>();
 
         todoListAdapter = new ArrayAdapter<>(this, R.layout.todo_item, todoList);
 
+        //region Description
         /*
         * Ovde vadimo listView iz layout-a, a zatim postavljamo adapter na taj ListView pozivanjem
         * metode listview.setAdapter koji prima kao parametar objekat klase Adapter.
         * */
+        //endregion
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(todoListAdapter);
 
-        /*
-        * Kao u LoginActivity, definisemo setOnClickListener za Button.
-        * */
-
-        Button todoButton = (Button) findViewById(R.id.todo_enter);
+        FloatingActionButton todoButton = (FloatingActionButton) findViewById(R.id.todo_enter);
         todoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText todoText = (EditText) findViewById(R.id.todo_text);
-
-                /*
-                * Vadimo ono sto je korisnik upisao u EditText polje.
-                *
-                * Zatim, dodajemo u vrednost u listu i obavestavamo adapter da se
-                * lista promenila, kako bi adapter azurirao listView.
-                * */
-                String todo = todoText.getText().toString();
-
-                todoList.add(todo);
-                todoListAdapter.notifyDataSetChanged();
-
-                /*
-                * Ovde pravimo novi TodoItem, kome pridruzujemo tekst todo_a i username trenutnog
-                * korisnika.
-                *
-                * Zatim upisujemo u bazu, pozvianjem metode execute() AsyncTaska. Metodi execute()
-                * prosledjujemo objekat tog todo_a, jer njega zelimo da upisemo u bazu.
-                * */
-
-                TodoItem item = new TodoItem(todo, username);
-
-                WriteToDatabase dbInsert = new WriteToDatabase();
-                dbInsert.execute(item);
-
-                /*
-                * Ovde pravimo implicitni Intent, koji sluzi kada zelimo da posaljemo intent, ali ne
-                * znamo koji ce activity da se pokrene. To radimo tako sto napravimo prazan Intent, a
-                * zatim mu pridruzimo Action, koji ce kasnije operativni sistem koristiti kako bi znao
-                * sta tacno da pokrene. Videti AndroidManifest.xml fajl za vise detalja o tome sta se desava
-                * sa ovim Intent-om.
-                *
-                * sendBroadcast() metoda salje broadcast, tj. salje implicitni intent operativnom sistemu.
-                * Primetite da se ne koristi startActivity, jer ne znamo koji Activity pokrecemo.
-                * */
-                Intent intent = new Intent();
-                intent.putExtra("text", todo);
-                intent.setAction(notificationIntent);
-                sendBroadcast(intent);
-
-                todoText.setText("");
+                fragment = new NewTodoFragment();
+                getFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.activity_todo,fragment)
+                        .commit();
             }
         });
 
@@ -160,6 +141,7 @@ public class TodoActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        //region Description
         /*
         * Ovde se vrsi konekcija sa bazom.
         * Pravimo objekat TodoItemDBHelper klase, koji cemo kasnije da koristimo za povezivanje na
@@ -168,6 +150,7 @@ public class TodoActivity extends AppCompatActivity {
         * Zatim citamo iz baze pokretanjem AsyncTask-a sa username-om kao parametrom, koga cemo kasnije
         * da koristimo u where uslovu select operacije.
         * */
+        //endregion
 
         dbHelper = new TodoItemDBHelper(this);
 
@@ -197,15 +180,24 @@ public class TodoActivity extends AppCompatActivity {
         Log.d("Lifecycle", "onStop");
     }
 
+    //region Description
     /*
     * Redefinisana metoda onBackPressed definise sta ce se desiti kada korisnik klikne na dugme
     * za vracanje unazad na svom uredjaju. U ovom slucaju, nista se nece desiti. Po default-u,
     * aplikacija unistava activity i prelazi na prethodni activity.
     * */
+    //endregion
 
     @Override
     public void onBackPressed() {
-
+        if(fragment != null && fragment.isVisible()) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -214,6 +206,7 @@ public class TodoActivity extends AppCompatActivity {
         Log.d("Lifecycle","onRestart");
     }
 
+    //region Description
     /*
     * Ovo je onClickListener koji se izvrsava kada korisnik klikne na dugme za logout.
     *
@@ -225,6 +218,7 @@ public class TodoActivity extends AppCompatActivity {
     *
     * Nakon toga, prelazimo preko Intent-a u LoginActivity.
     * */
+    //endregion
     public void onLogoutClicked(View view) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove("username");
@@ -235,6 +229,7 @@ public class TodoActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //region Description
     /*
     * Ovo je jos jedan primer implicitnog intent-a.
     *
@@ -250,6 +245,7 @@ public class TodoActivity extends AppCompatActivity {
     * aplikaciju preko koje ce da posalje mail. Nakon toga, pokrece se izabrani activity i korisnik salje
     * mail.
     * */
+    //endregion
     public void onSendEmail(View view) {
         TextView textView = (TextView) view;
         String text = textView.getText().toString();
@@ -262,6 +258,25 @@ public class TodoActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(intent, "Send Email"));
     }
 
+    @Override
+    public void onFragmentInteraction(String title, String desc) {
+        TodoItem todoItem = new TodoItem(title,desc,username);
+
+        todoList.add(todoItem.getText());
+        todoListAdapter.notifyDataSetChanged();
+
+        WriteToDatabase writeToDatabase = new WriteToDatabase();
+        writeToDatabase.execute(todoItem);
+
+        if(fragment != null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
+    }
+
+    //region Description
     /*
     * AsyncTask je apstraktna klasa koja koristi za poslove koje zelimo da obavimo u pozadini, dok
     * korisnik koristi nasu aplikaciju.
@@ -274,9 +289,11 @@ public class TodoActivity extends AppCompatActivity {
     * prosledimo objekte tipa TodoItem, u ovom slucaju i da ocekujemo da na kraju u metodi
     * onPostExecute bude Boolean.
     * */
+    //endregion
 
     private class WriteToDatabase extends AsyncTask<TodoItem, Void, Boolean> {
 
+        //region Description
         /*
         * Nakon kreiranja objekta klase WriteToDatabase i pokretanje execute() metode, izvrsava se
         * doInBackground. U njoj mi radimo vecinu posla koje zelimo da uradimo unutar ovog AsyncTask-a.
@@ -287,14 +304,18 @@ public class TodoActivity extends AppCompatActivity {
         * Parametar doInBackground je niz TodoItem objekata neodredjene duzine. Kao rezultat, unutar
         * doInBackground metode mozemo da koristimo items kao niz.
         * */
+        //endregion
 
         @Override
         protected Boolean doInBackground(TodoItem... items) {
+            //region Description
             /*
             * Ovim otvaramo konekciju sa bazom i to bazom u koju moze da se upisuju vrednosti.
             * */
+            //endregion
             SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+            //region Description
             /*
             * ContentValues objekat predstavlja VALUES kljucnu rec unutar INSERT operacije u SQL-u.
             *
@@ -303,25 +324,31 @@ public class TodoActivity extends AppCompatActivity {
             * items[0] je objekat klase TodoItem, pa ima getere i setere za sva polja. Time mi vadimo
             * vrednost iz tog objekta.
             * */
+            //endregion
 
             ContentValues values = new ContentValues();
             values.put(TodoItemContract.TodoItemEntry.COLUMN_NAME_TEXT, items[0].getText());
             values.put(TodoItemContract.TodoItemEntry.COLUMN_NAME_USER, items[0].getUser());
+            values.put(TodoItemContract.TodoItemEntry.COLUMN_NAME_TITLE, items[0].getTitle());
 
+            //region Description
             /*
             * db.insert je metoda koja se koristi za upisivanje u bazu. Njoj prosledjujemo ime tabele,
             * da li zelimo da unesemo prazan red i koje vrednosti upisujemo. Ona vraca id novog reda.
             * */
+            //endregion
 
             long newRowId = db.insert(TodoItemContract.TodoItemEntry.TABLE_NAME, null, values);
 
             return newRowId > 0;
         }
 
+        //region Description
         /*
         * OnPostExecute se poziva nakon zavrsetka doInBackground metode. Tu proveravamo da li je unet
         * red u bazu.
         * */
+        //endregion
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
@@ -334,10 +361,12 @@ public class TodoActivity extends AppCompatActivity {
         }
     }
 
+    //region Description
     /*
     * Ova klasa je jako slicna klasi WriteToDatabase, samo sto ona ovde prima String kao ulazni objekat
     * i ArrayList<String> kao rezultat.
     * */
+    //endregion
 
     private class ReadFromDatabase extends AsyncTask<String, Void, ArrayList<String>> {
 
