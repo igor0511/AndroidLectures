@@ -31,4 +31,10 @@ public class TodoItemDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(TodoItemContract.SQL_DELETE_ENTRIES);
         onCreate(sqLiteDatabase);
     }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(TodoItemContract.SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
 }
