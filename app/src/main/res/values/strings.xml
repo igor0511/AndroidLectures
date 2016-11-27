@@ -23,4 +23,8 @@
     <string name="Add" />
     <string name="todo_add_button">Add</string>
     <string name="add_new_todo">Add new todo</string>
+    <string name="send_sms">Send sms</string>
+    <string name="send_email">Send email</string>
+    <string name="sms_phone">Phone</string>
+    <string name="sms_body">Text</string>
 </resources>

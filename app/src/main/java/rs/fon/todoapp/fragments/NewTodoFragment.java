@@ -1,9 +1,12 @@
 package rs.fon.todoapp.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +49,9 @@ public class NewTodoFragment extends Fragment {
                 String title = titleEditText.getText().toString();
                 String desc = descEditText.getText().toString();
 
+                Log.d("Title", title);
+                Log.d("Title", desc);
+
                 onAddTodoPressed(title, desc);
             }
         });
@@ -62,11 +68,27 @@ public class NewTodoFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+        if (Build.VERSION.SDK_INT >= 23)
+            if (context instanceof OnFragmentInteractionListener) {
+                System.out.println("context" + context);
+                mListener = (OnFragmentInteractionListener) context;
+            } else {
+                throw new RuntimeException(context.toString()
+                        + " must implement OnFragmentInteractionListener");
+            }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (Build.VERSION.SDK_INT < 23) {
+            if (activity instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) activity;
+            } else {
+                throw new RuntimeException(activity.toString()
+                        + " must implement OnFragmentInteractionListener");
+            }
         }
     }
 

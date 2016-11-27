@@ -1,17 +1,28 @@
 package rs.fon.todoapp.activities;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,19 +36,23 @@ import rs.fon.todoapp.R;
 import rs.fon.todoapp.database.TodoItemContract;
 import rs.fon.todoapp.database.TodoItemDBHelper;
 import rs.fon.todoapp.fragments.NewTodoFragment;
+import rs.fon.todoapp.fragments.SendSmsFragment;
 import rs.fon.todoapp.model.TodoItem;
 
-public class TodoActivity extends AppCompatActivity implements NewTodoFragment.OnFragmentInteractionListener {
+public class TodoActivity extends AppCompatActivity implements NewTodoFragment.OnFragmentInteractionListener, SendSmsFragment.OnFragmentInteractionListener {
     //region Description
     /*
     * Ovo je konstanta koja sluzi kao Action u Implicitnom Intentu.
     * */
     //endregion
     private static final String notificationIntent = "rs.fon.todo.Notif";
+    public static final int MY_PERMISSIONS_REQUEST_SMS = 1;
 
     private String username;
     private TextView nameText;
     private ListView listView;
+
+    private String tempText;
 
     //region Description
     /*
@@ -61,6 +76,7 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
     private SharedPreferences sharedPreferences = null;
 
     private NewTodoFragment fragment = null;
+    private SendSmsFragment smsFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +134,7 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         * */
         //endregion
         listView = (ListView) findViewById(R.id.list_view);
+        registerForContextMenu(listView);
         listView.setAdapter(todoListAdapter);
 
         FloatingActionButton todoButton = (FloatingActionButton) findViewById(R.id.todo_enter);
@@ -127,7 +144,7 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
                 fragment = new NewTodoFragment();
                 getFragmentManager()
                         .beginTransaction()
-                        .add(R.id.activity_todo,fragment)
+                        .add(R.id.fragment_container,fragment)
                         .commit();
             }
         });
@@ -176,6 +193,31 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
 
         dbHelper.close();
         Log.d("Lifecycle", "onStop");
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == R.id.list_view) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.todo_menu, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        String selectedTodo = todoList.get(info.position);
+
+        switch (item.getItemId()) {
+            case R.id.send_sms_id:
+                onSendSMS(selectedTodo);
+                return true;
+            case R.id.send_email_id:
+                onSendEmail(selectedTodo);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     //region Description
@@ -244,10 +286,7 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
     * mail.
     * */
     //endregion
-    public void onSendEmail(View view) {
-        TextView textView = (TextView) view;
-        String text = textView.getText().toString();
-
+    public void onSendEmail(String text) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc882");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
@@ -256,9 +295,39 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         startActivity(Intent.createChooser(intent, "Send Email"));
     }
 
+    public void onSendSMS(String text) {
+        smsFragment = SendSmsFragment.newInstance(text);
+
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container,smsFragment)
+                .commit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_SMS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if(tempText != null && !tempText.isEmpty()) {
+                        if(smsFragment != null && smsFragment.isVisible()) {
+                            getFragmentManager().beginTransaction().remove(smsFragment).commit();
+                        }
+
+                        onSendSMS(tempText);
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void onFragmentInteraction(String title, String desc) {
         TodoItem todoItem = new TodoItem(title,desc,username);
+        Log.d("App",todoItem.getText());
 
         todoList.add(todoItem.getText());
         todoListAdapter.notifyDataSetChanged();
@@ -266,12 +335,23 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         WriteToDatabase writeToDatabase = new WriteToDatabase();
         writeToDatabase.execute(todoItem);
 
+        Log.d("App",todoItem.getText());
+
         if(fragment != null) {
             getFragmentManager()
                     .beginTransaction()
                     .remove(fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void onSmsSent() {
+        if(smsFragment != null && smsFragment.isVisible()) {
+            getFragmentManager().beginTransaction().remove(smsFragment).commit();
+        }
+
+        Toast.makeText(this,"Sms sent",Toast.LENGTH_SHORT).show();
     }
 
     //region Description
