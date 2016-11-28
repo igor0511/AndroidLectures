@@ -1,6 +1,7 @@
 package rs.fon.todoapp.activities;
 
 import android.Manifest;
+import android.app.Notification;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,7 @@ import rs.fon.todoapp.database.TodoItemDBHelper;
 import rs.fon.todoapp.fragments.NewTodoFragment;
 import rs.fon.todoapp.fragments.SendSmsFragment;
 import rs.fon.todoapp.model.TodoItem;
+import rs.fon.todoapp.views.notifications.NewTodoNotification;
 
 public class TodoActivity extends AppCompatActivity implements NewTodoFragment.OnFragmentInteractionListener, SendSmsFragment.OnFragmentInteractionListener {
     //region Description
@@ -311,7 +313,7 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
     public void onSendEmail(String text) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc882");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "");
         intent.putExtra(Intent.EXTRA_TEXT, text);
 
         startActivity(Intent.createChooser(intent, "Send Email"));
@@ -375,12 +377,13 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
     }
 
     @Override
-    public void onSmsSent() {
+    public void onSmsSent(String smsBody) {
         if(smsFragment != null && smsFragment.isVisible()) {
             getFragmentManager().beginTransaction().remove(smsFragment).commit();
         }
 
         Toast.makeText(this,"Sms sent",Toast.LENGTH_SHORT).show();
+        NewTodoNotification.notify(this,smsBody,1);
     }
 
     //region Description
