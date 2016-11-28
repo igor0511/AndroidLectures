@@ -86,8 +86,9 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
 
         //region Description
         /*
-        * Inicijalizacija SharedPreferences objekta se vrsi na isti nacin kao i u LoginActivity.
-        * Obavezno je da ime fajla bude isto.
+        * Inicijalizacija SharedPreferences objekta i vadjenje username polja, kako bismo
+        * utvrdili da li se korisnik prethodno ulogovao, ukoliko nije, saljemo ga na
+        * LoginActivity, kako bi popunio svoje podatke.
         * */
         //endregion
 
@@ -141,6 +142,16 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         todoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //region Fragment
+                /*
+                * Za upravljanje fragmentima koristimo objekat FragementManager klase koga dobijamo
+                * pozivom getFragmentManager() metode iz Activity-ja. Kako bismo pokrenuli promenu fragmenta,
+                * koristimo beginTransaction() metodu, zatim biramo kako zelimo da promenimo fragment.
+                * Mozemo odabrati add, remove ili replace metode, kojima prosledjujemo element iz layout-a
+                * gde zelimo da stavimo taj fragment, i instancu klase Fragment.
+                * Da bi se transakcija konacno izvrsila, koristimo commit() metodu.
+                * */
+                //endregion
                 fragment = new NewTodoFragment();
                 getFragmentManager()
                         .beginTransaction()
@@ -230,10 +241,21 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
 
     @Override
     public void onBackPressed() {
+        //region OnBackPressed
+        /*
+        * Kada korisnik klikne na back dugme na svom uredjaju, mi proveravamo da li je neki od fragmenata
+        * aktivan, ukoliko jeste, njega skidamo, ukoliko nije, izlazimo iz aplikacije.
+        * */
+        //endregion
         if(fragment != null && fragment.isVisible()) {
             getFragmentManager()
                     .beginTransaction()
                     .remove(fragment)
+                    .commit();
+        } else if(smsFragment != null && smsFragment.isVisible()) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .remove(smsFragment)
                     .commit();
         } else {
             super.onBackPressed();
@@ -324,18 +346,25 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         }
     }
 
+    //region Interakcija sa fragmentom
+    /*
+    * Kada korisnik klikne na dugme na NewTodoFragment-u, izvrsava se ova metoda, koja ubacuje novi
+    * todo u listu i upisuje u bazu.
+    *
+    * Na kraju metode, skida se fragment za ubacivanje novog todo_a.
+    *
+    * Ova metoda je override-ovana metoda interfejsa iz NewTodoFragment klase.
+    * */
+    //endregion
     @Override
     public void onFragmentInteraction(String title, String desc) {
         TodoItem todoItem = new TodoItem(title,desc,username);
-        Log.d("App",todoItem.getText());
 
         todoList.add(todoItem.getText());
         todoListAdapter.notifyDataSetChanged();
 
         WriteToDatabase writeToDatabase = new WriteToDatabase();
         writeToDatabase.execute(todoItem);
-
-        Log.d("App",todoItem.getText());
 
         if(fragment != null) {
             getFragmentManager()

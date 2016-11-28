@@ -15,10 +15,27 @@ import android.widget.EditText;
 
 import rs.fon.todoapp.R;
 
+//region Fragment
 /**
+ * Fragment predstavlja komponentu koja moze da se iskoristi u vise Activity-ja, na vise mesta u istom
+ * Activity-ju koja moze ali ne mora da ima layout vezan za nju. U ovom slucaju, mi fragment koristimo
+ * kako bismo prikazali formu za ubacivanje novog todo_a.
+ *
+ * Unutar fragmenta definisemo interfejs koji predstavlja jedini nacin komunikacije izmedju Activity-ja
+ * i Fragmenta.
  *
  */
+//endregion
 public class NewTodoFragment extends Fragment {
+    //region mListener
+    /*
+    * mListener predstavlja objekat gde cemo cuvati referencu na nas activity.
+    *
+    * TodoActivity klasa impelementira interfejs ove klase, tako da cemo taj activity kastovati
+    * kao objekat ovog interfejsa, sto znaci da cemo dobiti samo metode koje su definisane unutar
+    * tog interfejsa, a koje su override-ovane unutar TodoActivity klase.
+    * */
+    //endregion
     private OnFragmentInteractionListener mListener;
 
     private Button addNewTodoButton = null;
@@ -34,6 +51,17 @@ public class NewTodoFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /*
+    * onCreateView metoda predstavalja vazan deo zivotnog ciklusa fragmenta, gde se definise layout
+    * tog fragmenta i svi elementi koji se nalaze unutar njega i gde se hvataju svi dogadjaji, kao na
+    * primer klik na dugme.
+    *
+    * Ova metoda vraca View objekat, a kao parametar prima inflater, koga koristimo da od layout
+    * fajla napravimo view. Na novi View koga smo kreirali mozemo da kacimo onClickListener-e, kao i da
+    * vrsimo obradu teksta u okviru EditText polja.
+    *
+    * Kada smo ceo layout podesili, vracamo ga kao povratnu vrednost ove metode
+    * */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,12 +87,27 @@ public class NewTodoFragment extends Fragment {
         return v;
     }
 
+    //region onAddTodoPressed
+    /*
+    * Metoda koja poziva metodu iz interfejsa i time ostvaruje interakciju fragmenta sa activity-jem.
+    * */
+    //endregion
     public void onAddTodoPressed(String title, String desc) {
         if (mListener != null) {
             mListener.onFragmentInteraction(title, desc);
         }
     }
 
+    //region onAttach
+    /*
+    * onAttach je vazna metoda zivotnog ciklusa fragmenta, koja se poziva kada se fragment veze za
+    * activity. Kao parametar dobijamo context, koji u ovom slucaju prestavalja nas activity, pa njega
+    * kastujemo u interfejs i pridruzujemo mListener polju.
+    *
+    * Ponovljena metoda onAttach(Activity activity) prestavlja metodu koja vazi samo API nivoe 23 i nize.
+    * Ova metoda se smatra zastarelom u API nivou 23 i kasnije.
+    * */
+    //endregion
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -98,8 +141,6 @@ public class NewTodoFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(String title, String desc);
     }
