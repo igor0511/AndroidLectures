@@ -137,9 +137,23 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         * */
         //endregion
         listView = (ListView) findViewById(R.id.list_view);
+
+        //region ContextMenu
+        /*
+        * Context Menu predstavlja meni koji se pojavljuje kada uradimo dugi klik na neki element.
+        * Mi ovde zelimo da se taj meni pojavi kada mi kliknemo na neki od todo_ova iz liste, pa mi
+        * metodi registerforContextMenu() prosledjujemo listView, gde se nalazi lista.
+        * */
+        //endregion
         registerForContextMenu(listView);
         listView.setAdapter(todoListAdapter);
 
+        //region FAB
+        /*
+        * FloatingActionButton predstavlja cirkularno dugme koje dolazi u sklopu MaterialDesign standarda.
+        * na njega postavljamo onclick Listener koji treba da postavi fragment za dodavanje novog todo_a.
+        * */
+        //endregion
         FloatingActionButton todoButton = (FloatingActionButton) findViewById(R.id.todo_enter);
         todoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,6 +222,13 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         Log.d("Lifecycle", "onStop");
     }
 
+    //region ContextMenu
+    /*
+    * Ova metoda je callback metoda koja se poziva u trenutku kada treba da se napravi context menu.
+    * Ukoliko se context menu pravi unutar naseg listView-a, mi njemu dodeljujemo menu koji se nalazi u
+    * res/menu/todo_menu fajlu.
+    * */
+    //endregion
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId() == R.id.list_view) {
@@ -216,6 +237,18 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         }
     }
 
+    //region ContextItemSelected
+    /*
+    * Ova metoda se poziva kada korisnik klikne na jedan todo iz liste.
+    * getMenuInfo iz MenuItem klase vraca informacije o tome sto smo kliknuli, od kojih nam je najbitnija
+    * pozicija todo_a koga smo kliknuli u listi. Pozicija predstavlja indeks tog todo_a unutar liste, tako da
+    * koristeci poziciju tog item-a, mozemo da izvucemo iz liste todo_ova odgovarajuci string koji zelimo da posaljemo
+    * kao sms ili email.
+    *
+    * Kako bismo odredili koju je opciju (sms ili email) odabrao korisnik, koristimo id tog item-a. Id-jeve smo
+    * definisali u res/menu/todo_menu fajlu
+    * */
+    //endregion
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
@@ -319,6 +352,11 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         startActivity(Intent.createChooser(intent, "Send Email"));
     }
 
+    //region onsendsms
+    /*
+    * Ova metoda sluzi samo za postavljanje fragmenta u layout.
+    * */
+    //endregion
     public void onSendSMS(String text) {
         smsFragment = SendSmsFragment.newInstance(text);
 
@@ -328,6 +366,17 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
                 .commit();
     }
 
+    //region RequestPermissionCallback
+    /*
+    * Ova metoda se poziva kada korisnik odgovori na dijalog koji se pojavi kada aplikacija zatrazi neku dozvolu ili set dozvola.
+    * Prvi parametar je requestcode koji predstavlja requestCode koji smo prosledili kada smo trazili dozvolu, kako bismo u ovoj metodi
+    * mogli da razlikujemo razlicite dozvole koje smo trazili.
+    *
+    * Nakon sto zakljucimo da je requestCode vezan za dozvolu za slanje sms-a, ukoliko je dozvoljeno slanje sms-a,
+    * skidamo prethodni fragment i ponovo ga kacimo, samo sto sada, korisik ce moci da posalje sms bez ponovnog trazenja
+    * dozvole.
+    * */
+    //endregion
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -376,6 +425,15 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         }
     }
 
+    //region Interakcija sa smsFragmentom
+    /*
+    * Ovo je metoda koja se poziva kada korisnik klikne na dugme za slanje sms-a na SmsFragment-u.
+    *
+    * Ukoliko postoji smsFragment, skidamo ga, zatim korisnika obavestavamo da je poslata poruka i pravimo notifikaciju,
+    * koriscenjem implicitnog intenta sa nasom akcijom, videti AndroidManifest.xml fajl za vise o tome gde i kako se hvata
+    * ovaj Intent.
+    * */
+    //endregion
     @Override
     public void onSmsSent(String smsBody) {
         if(smsFragment != null && smsFragment.isVisible()) {
@@ -383,7 +441,10 @@ public class TodoActivity extends AppCompatActivity implements NewTodoFragment.O
         }
 
         Toast.makeText(this,"Sms sent",Toast.LENGTH_SHORT).show();
-        NewTodoNotification.notify(this,smsBody,1);
+        Intent i = new Intent();
+        i.setAction("rs.fon.todo.Notif");
+        sendBroadcast(i);
+
     }
 
     //region Description

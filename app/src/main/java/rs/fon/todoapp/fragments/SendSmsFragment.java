@@ -21,6 +21,7 @@ import rs.fon.todoapp.R;
 import rs.fon.todoapp.activities.TodoActivity;
 
 public class SendSmsFragment extends Fragment {
+    //Konstanta preko koje cemo znati da ubacimo/izvucemo iz argumenata fragmenta.
     private static final String PARAM_BODY = "smsBody";
 
     private String smsBody;
@@ -31,6 +32,9 @@ public class SendSmsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    //Metoda koja sluzi da napravimo novi fragment, sa nekim argumentima. Argumenti se cuvaju u bundle objektu
+    //koga kasnije postavljamo kao argumente tog fragmenta. Videti TodoActivity, trenutak kada postavljamo
+    //fragment, korsitimo ovu metodu, sa parametrom tekst poruke.
     public static SendSmsFragment newInstance(String smsBody) {
         SendSmsFragment fragment = new SendSmsFragment();
         Bundle args = new Bundle();
@@ -42,11 +46,14 @@ public class SendSmsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Kao sto smo iz intent-a u activity vadili neke vrednosti,
+        //u onCreate metodi fragmenta vadimo argumente koristeci metodu getArguments()
         if (getArguments() != null) {
             smsBody = getArguments().getString(PARAM_BODY);
         }
     }
 
+    //Pravimo layout, kao i u NewTodoFragment klasi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,6 +71,20 @@ public class SendSmsFragment extends Fragment {
                 String phoneNumber = todoPhone.getText().toString();
                 String body = todoBody.getText().toString();
 
+                //region Permission
+                /*
+                * Na ovaj nacin trazimo dozvolu za koriscenje nekih servisa u API nivou 23 i vise.
+                *
+                * Prvo proveravamo da li je korisnik ranije odoborio slanje sms-a, ukoliko jeste,
+                * mozemo poslati poruku, ukoliko nije, koristeci metodu requestPermissions, trazimo
+                * dozvolu korisnika. Nakon toga, poziva se metoda onRequestPermissionsResult u
+                * TodoActivity klasi, gde se obradjuje odgovor korisnika.
+                *
+                * Prvi parametar ove metode je aktivnost na koju se odnosi ovaj fragment, drugi je set
+                * dozvola koje trazimo, u ovom slucaju je to samo jedna, i requestCode, koji ce nam posluziti
+                * kasnije u obradi odgovora.
+                * */
+                //endregion
                 if (ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                     sendSMS(phoneNumber, body);
@@ -77,6 +98,8 @@ public class SendSmsFragment extends Fragment {
         return v;
     }
 
+    //Za slanje poruke koristimo SmsManager objekat, kome prosledjujemo broj i tekst poruke.
+    //Nakon toga, pozivamo metodu onSmsSent iz TodoActivity klase.
     public void sendSMS(String phoneNumber, String smsBody) {
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber, null, smsBody, null, null);
