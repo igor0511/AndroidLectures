@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout ovog activity-ja je napravljen kao jednostavan RelativeLayout, gde je svaka komponenta
+    postavljena u odnosu na drugu.
+
+    Za vise o layout-ima, pogledati aplikaciju Kalkulator i Todo.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="rs.fon.imdbfon.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/search_container"
+        android:layout_height="wrap_content">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_weight="1"
+        android:id="@+id/search_text"
+        android:hint="Search" />
+
+        <Button
+            android:text="Search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/button"
+            android:onClick="searchClicked"
+            android:layout_weight="3" />
+
+    </LinearLayout>
+
+    <ImageView
+        app:srcCompat="@mipmap/ic_launcher"
+        android:layout_below="@+id/search_container"
+        android:layout_alignParentStart="true"
+        android:id="@+id/movie_image"
+        android:layout_height="150dp"
+        android:layout_width="150dp" />
+
+    <TextView
+        android:text="Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_container"
+        android:layout_toEndOf="@+id/movie_image"
+        android:id="@+id/textView3"
+        android:layout_marginLeft="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/movie_title"
+        android:layout_below="@+id/search_container"
+        android:layout_alignParentEnd="true"
+        android:text="textview"
+        android:maxWidth="150dp" />
+
+    <TextView
+        android:text="Released"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/movie_image"
+        android:layout_toEndOf="@+id/movie_image"
+        android:id="@+id/textView5"
+        android:layout_marginLeft="15dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView5"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/movie_released" />
+
+    <TextView
+        android:text="Plot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/movie_image"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView7"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView7"
+        android:layout_alignParentStart="true"
+        android:id="@+id/movie_plot"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp" />
+</RelativeLayout>
